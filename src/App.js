@@ -6,11 +6,10 @@ export default function App() {
   let [users, setUsers] = useState([]);
   let [cargando, setCargando] = useState(true);
 
-  const [data] = useFetch("https://jsonplaceholder.typicode.com/users");
+  const [data] = useFetch("https://jsonplaceholder.typicode.com/users", setCargando);
 
   useEffect(() => {
     setUsers(data)
-    setCargando(false)
   }, [data]);
 
   return (
