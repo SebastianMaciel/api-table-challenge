@@ -1,17 +1,32 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
 
-const useFetch = (url, setCargando) => {
-    const [data, setData] = useState(null);
+// Manejamos desde este hook todo lo relacionado con la llamada a la API
+const useFetch = (url) => {
+  const [users, setUsers] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
-    useEffect(() => {
-        fetch(url)
-            .then((res) => res.json())
-            .then((data) => setData(data))
-            .then(() => setCargando(false))
-            .catch(error => console.error(error));
-    }, [url]);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(url);
+        const data = await response.json();
 
-    return [data];
+        setUsers(data);
+        setError(false);
+      } catch (error) {
+        setError(true);
+        console.error('Error en la response: ', error);
+      } finally {
+        // Salga bien o mal, seteamos el loading en false
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [url]);
+
+  return { users, error, loading };
 };
 
 export default useFetch;
